@@ -1,34 +1,34 @@
 const increment = document.querySelector(".increment");
 const decrement = document.querySelector(".decrement");
 const reset = document.querySelector(".reset");
-let counter = document.querySelector(".counter");
+const h1  = document.querySelector("h1");
+let counter = h1.innerText;
 let store = Redux.createStore(reducer);
 let count = store.getState();
-let totalCount= 0;
+counter.innerText = counter;
 
 increment.addEventListener("click", () => {
   store.dispatch({
     type: "increment",
   });
-  totalCount = store.getState();
-  counter.innerText =totalCount;
 });
 
 decrement.addEventListener("click", () => {
   store.dispatch({
     type: "decrement",
   });
-  totalCount = store.getState();
-  counter.innerText = totalCount;
 });
 
 reset.addEventListener("click", () => {
   store.dispatch({
     type: "reset",
   });
-  totalCount= store.getState();
-  counter.innerText = totalCount;
 });
+
+store.subscribe(()=>{
+  counter = store.getState();
+  h1.innerText = counter;
+})
 
 function reducer(state = 0, action) {
   switch (action.type) {
