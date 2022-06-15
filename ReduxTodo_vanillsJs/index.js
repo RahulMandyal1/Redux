@@ -1,12 +1,50 @@
 let rootEle = document.querySelector("ul");
 let inputBox = document.querySelector(".userinput");
-const allTodos = [];
+let initialValue = { todos: [] };
+let store = Redux.createStore(reducer);
+
+function reducer(preState = initialValue, action) {
+  switch (action) {
+    case "addTodo":
+      const newTodo = { title: action.value, isDone: false };
+      return { ...preState, todos: preState.todos.concat(newTodo) };
+
+    case "isDone":
+      let allTodos = preState.todos;
+      allTodos[action.index].isDone = !allTodos[action.index].isDone;
+      return { todos: allTodos };
+
+    case "deleteTodo":
+      return { ...preState, todos: preState.todos.splice(action.index) };
+  }
+}
+
+// once user press the enter add todo in the alltodos array
+inputBox.addEventListener("keyup", (event) => {
+  if (event.keyCode === 13) {
+    store.dispatch({ type: "addTodo", value: event.target.value });
+    event.target.value = "";
+  }
+});
+
+// to delete a todo
+function DeleteTodo(event) {
+  let index = Number(event.target.dataset.id);
+  store.dispatch({ action: "deleteTodo", index });
+}
+
+// to complete  the todo
+function handleCheck(event) {
+  let index = Number(event.target.dataset.id);
+  store.dispatch({ action: "isDone", index });
+}
 
 // funtion  to create the userinterface
-function createUi() {git a
+function createUi() {
   rootEle.innerHTML = " ";
   inputBox.value = "";
-  allTodos.forEach((eachTodo, index) => {
+  const { todos } = store.getState();
+  todos.forEach((eachTodo, index) => {
     let li = document.createElement("li");
     let input = document.createElement("input");
     input.type = "checkbox";
@@ -27,25 +65,6 @@ function createUi() {git a
   });
 }
 
-// once user press the enter add todo in the alltodos array
-inputBox.addEventListener("keyup", (event) => {
-  if (event.keyCode === 13) {
-    rootEle.innerHTML = " ";
-    allTodos.push({ title: event.target.value, isDone: false });
-    createUi();
-  }
+store.subscribe(() => {
+  createUi();
 });
-
-// to delete a todo
-function DeleteTodo(event) {
-  let index = Number(event.target.dataset.id);
-  allTodos.splice(index, 1);
-  createUi();
-}
-
-// to complete  the todo
-function handleCheck(event) {
-  let index = Number(event.target.dataset.id);
-  allTodos[index].isDone = !allTodos[index].isDone;
-  createUi();
-}
