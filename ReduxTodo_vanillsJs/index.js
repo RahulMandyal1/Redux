@@ -1,21 +1,22 @@
 let rootEle = document.querySelector("ul");
 let inputBox = document.querySelector(".userinput");
-let initialValue = { todos: [] };
+let todos = [];
 let store = Redux.createStore(reducer);
 
-function reducer(preState = initialValue, action) {
-  switch (action) {
+function reducer(preState = todos, action) {
+  switch (action.type) {
     case "addTodo":
       const newTodo = { title: action.value, isDone: false };
-      return { ...preState, todos: preState.todos.concat(newTodo) };
+      console.log(preState.concat(newTodo));
+      return (preState = preState.concat(newTodo));
 
     case "isDone":
-      let allTodos = preState.todos;
+      let allTodos = preState;
       allTodos[action.index].isDone = !allTodos[action.index].isDone;
-      return { todos: allTodos };
+      return allTodos;
 
     case "deleteTodo":
-      return { ...preState, todos: preState.todos.splice(action.index) };
+      return preState.splice(action.index);
   }
 }
 
@@ -30,20 +31,20 @@ inputBox.addEventListener("keyup", (event) => {
 // to delete a todo
 function DeleteTodo(event) {
   let index = Number(event.target.dataset.id);
-  store.dispatch({ action: "deleteTodo", index });
+  store.dispatch({ typegit: "deleteTodo", index });
 }
 
 // to complete  the todo
 function handleCheck(event) {
   let index = Number(event.target.dataset.id);
-  store.dispatch({ action: "isDone", index });
+  store.dispatch({ type: "isDone", index });
 }
 
 // funtion  to create the userinterface
 function createUi() {
   rootEle.innerHTML = " ";
   inputBox.value = "";
-  const { todos } = store.getState();
+  const todos = store.getState();
   todos.forEach((eachTodo, index) => {
     let li = document.createElement("li");
     let input = document.createElement("input");
