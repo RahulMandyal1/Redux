@@ -37,7 +37,6 @@ function reducer(state = { todos: [] }, action) {
     case "isDone":
       let updateTodo = state.todos;
       updateTodo[action.index].isDone = !updateTodo[action.index].isDone;
-      console.log(updateTodo);
       return { ...state, todos: updateTodo };
 
     default:
