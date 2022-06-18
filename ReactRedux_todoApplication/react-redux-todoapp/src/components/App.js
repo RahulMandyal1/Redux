@@ -1,29 +1,34 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import store from "./store";
+import CreateTodo from "./TodoUi/CreateTodo";
+
 class App extends Component {
   state = {
-    title: " enter the value here",
+    title: " ",
   };
 
+  //change todo title
   handleChange = (event) => {
+    console.log(event.target.value);
     this.setState({
       title: event.target.value,
     });
   };
 
+  //delete todo
   deleteTodo = ({ target }) => {
     let id = Number(target.id);
     this.props.dispatch({
       type: "deleteTodo",
       index: id,
     });
-    
+
     this.setState({
       title: "",
     });
   };
 
+  //create todo
   createTodo = () => {
     this.props.dispatch({
       type: "addtodo",
@@ -35,27 +40,43 @@ class App extends Component {
     });
   };
 
+  //update todo once user completed a todo
+  updateTodo = (id) => {
+    this.props.dispatch({
+      type: "isDone",
+      index: id,
+    });
+
+    this.setState({
+      title: "",
+    });
+  };
+
   render() {
     return (
-      <div className="container">
-        <div>
+      <div className="todo-container">
+        <h1 className="todo-heading">Todo App</h1>
+        <div className="flex-row">
           <input
             type="text"
+            className="userinput"
             onChange={this.handleChange}
             value={this.state.title}
-            placeholder=" enter a todo here "
+            placeholder=" What needs to be Done "
           />
-          <button onClick={this.createTodo}>create todo</button>
+          <button onClick={this.createTodo} className="userclick">create todo</button>
         </div>
         <ul>
           {this.props.todos.map((todo, index) => {
             return (
-              <div className="todo" key={index}>
-                <li> {todo.title}</li>
-                <span id={index} onClick={this.deleteTodo}>
-                  ❌
-                </span>
-              </div>
+              <CreateTodo
+                title={todo.title}
+                index={index}
+                deleteTodo={this.deleteTodo}
+                key={index}
+                isDone={todo.isDone}
+                updateTodo={this.updateTodo}
+              />
             );
           })}
         </ul>
