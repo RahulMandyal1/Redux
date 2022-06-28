@@ -57,3 +57,9 @@ store.dispatch(decrement());
 store.dispatch(decrement());
 store.dispatch(reset());
 store.subscribe(() => {});
+
+
+
+// Middlewares is the suggested way to Extend Redux with custom functionality
+// Provides a third party Extension point  between dispatching  action 
+// Used middlewares for  logging and asynchronous task 
