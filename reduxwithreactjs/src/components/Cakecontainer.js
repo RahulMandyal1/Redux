@@ -18,11 +18,20 @@ function Cakecontainer(props) {
   );
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state ,ownProps) => {
+  const itemState = ownProps.cake  ?  state.iceCream.numberofIcecream : state.cake.numberOfCakes;
   return {
-    numberOfCakes: state.cake.numberOfCakes,
+    numberOfCakes: itemState,
   };
 };
+
+
+// const mapStateToProps = (state) => {
+//   return {
+//     numberOfCakes:  state.cake.numberOfCakes,
+//   };
+// };
+
 
 const mapDispatchToProps = (dispatch) => {
   return {
